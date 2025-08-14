@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Performa Invoice Form</title>
+  <style>
+    body {
+      background-color: #0d1117;
+      color: #e6e6e6;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .form-container {
+      background-color: #161b22;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 900px;
+      width: 100%;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: #58a6ff;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.2rem;
+    }
+
+    label {
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+      display: block;
+      color: #c9d1d9;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      background-color: #0d1117;
+      color: #e6e6e6;
+      transition: border 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #58a6ff;
+      outline: none;
+    }
+
+    button {
+      grid-column: 1 / -1;
+      background-color: #238636;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #2ea043;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Invoice Form</h2>
+    <form action="http://127.0.0.1:5000/generate" method="post">
+      <div>
+        <label>Date:</label>
+        <input type="text" name="date" value="08/08/2025">
+      </div>
+      <div>
+        <label>Invoice Number:</label>
+        <input type="text" name="invoice_number" value="20005678">
+      </div>
+      <div>
+        <label>Price:</label>
+        <input type="text" name="price" value="€ 120,500.00">
+      </div>
+      <div>
+        <label>Buyer Name:</label>
+        <input type="text" name="buyer_name" value="Damon S.A.">
+      </div>
+      <div>
+        <label>Buyer Street:</label>
+        <input type="text" name="buyer_street" value="Hafenstrasse 12">
+      </div>
+      <div>
+        <label>Buyer City/Postcode/Country:</label>
+        <input type="text" name="buyer_address" value="20457, Hamburg, DE">
+      </div>
+      <div>
+        <label>Buyer Email:</label>
+        <input type="text" name="buyer_email" value="office@newcustomer.de">
+      </div>
+      <div>
+        <label>Buyer Phone:</label>
+        <input type="text" name="buyer_phone" value="+34637404711">
+      </div>
+      <div>
+        <label>Buyer VAT:</label>
+        <input type="text" name="buyer_vat" value="VAT DE123456789">
+      </div>
+      <div>
+        <label>Seller Name:</label>
+        <input type="text" name="seller_name" value="EuroTrucks AG">
+      </div>
+      <div>
+        <label>Seller Street:</label>
+        <input type="text" name="seller_street" value="Industriestrasse 55">
+      </div>
+      <div>
+        <label>Seller City/Postcode/Country:</label>
+        <input type="text" name="seller_address" value="80331, München, DE">
+      </div>
+      <div>
+        <label>Seller VAT:</label>
+        <input type="text" name="seller_vat" value="VAT DE987654321">
+      </div>
+      <div>
+        <label>Seller Reg. Number:</label>
+        <input type="text" name="seller_reg" value="987654321">
+      </div>
+      <div>
+        <label>Seller Phone:</label>
+        <input type="text" name="seller_phone" value="+31 (0)413 72 83 20">
+      </div>
+      <div>
+        <label>Seller Email:</label>
+        <input type="text" name="seller_email" value="info@basworld.com">
+      </div>
+      <div>
+        <label>Seller Website:</label>
+        <input type="text" name="seller_website" value="www.basworld.com">
+      </div>
+      <div>
+        <label>IBAN:</label>
+        <input type="text" name="iban" value="DE89 3704 0044 0532 0130 00">
+      </div>
+      <div>
+        <label>BIC:</label>
+        <input type="text" name="bic" value="DEUTDEDBXXX">
+      </div>
+      <div>
+        <label>Total Text:</label>
+        <input type="text" name="total_text" value="Total">
+      </div>
+      <div>
+        <label>Account Name:</label>
+        <input type="text" name="account_name" value="">
+      </div>
+      <div>
+        <label>Image Logo:</label>
+        <input type="text" name="logo" value="">
+      </div>
+      <div>
+        <label>Type Nymber:</label>
+        <input type="text" name="seller_reg" value="">
+      </div>
+      <div>
+        <label>Vihicle brand:</label>
+        <input type="text" name="vehicle_brand" value="">
+      </div>
+      <div>
+        <label>Vihicle model:</label>
+        <input type="text" name="vehicle_model" value="">
+      </div>
+      <div>
+        <label>Vihicle condition:</label>
+        <input type="text" name="vehicle_condition" value="">
+      </div>
+      <div>
+        <label>payment terms:</label>
+        <input type="text" name="payment_terms" value="">
+      </div>
+      <div>
+        <label> Veghel NL: </label>
+        <input type="text" name="veghel" value="Veghel NL">
+      </div>
+      <button type="submit">Generate PDF</button>
+    </form>
+  </div>
+</body>
+</html>

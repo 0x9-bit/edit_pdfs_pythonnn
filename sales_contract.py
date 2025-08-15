@@ -90,19 +90,21 @@ def generate():
         "Axion 950 C-Matic Cebis": form_data.get("vehicle_model", ""),
         "Vehicles are sold in the condition you accepted. No warranty applies unless a BAS World warranty package is purchased or a": vehicle_condition_line1,
         "factory warranty is applicable.": vehicle_condition_line2,
-        "A down payment of €10,000.00 or full payment needs to be received before 20/06/2025. Failure to do so may result in the": payment_terms_line1,
+        "A down payment of": payment_terms_line1,
+        "€10,000.00":payment_terms_line1,
+        "or full payment needs to be received before":payment_terms_line1,
+        "20/06/2025":payment_terms_line1,
+        ". Failure to do so may result in the":payment_terms_line1,
         "unavailability of the chosen vehicle(s).": payment_terms_line2, 
         "For questions and support concerning the delivery of your vehicle(s), please contact Customer Support at cs@basworld.com or": customer_support_line1,
         "+31 413 75 42 50.": customer_support_line2,
         "Vehicles are sold in the condition you accepted. No warranty applies unless a BAS World warranty package is purchased or a": vehicle_condition_line1,
         "factory warranty is applicable.": vehicle_condition_line2,
 
-        "A down payment of €10,000.00 or full payment needs to be received before 20/06/2025. Failure to do so may result in the": payment_terms_1_line1,
-        "unavailability of the chosen vehicle(s).": payment_terms_1_line2,
-
-        "A full payment must be completed before 03/07/2025.": payment_terms_2_line2,
-
-        "In case the payment terms are not met, the order will be cancelled. We will charge you a cancellation fee of 10% and any": payment_terms_3_line1,
+        "A full payment must be completed before": payment_terms_2_line2,
+        "03/07/2025": payment_terms_2_line2,
+        ".": payment_terms_3_line2,
+        "Purchased vehicle(s) must be collected within 21 days. If this time": payment_terms_4_line1,
         "advance costs incurred, with a minimum of €2500. The vehicle(s) remains property of BAS World.": payment_terms_3_line2,
 
         "Purchased vehicle(s) must be collected within 21 days. If this time frame is exceeded, a storage fee of €35 will be charged per": payment_terms_4_line1,

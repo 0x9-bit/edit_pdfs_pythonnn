@@ -6,19 +6,21 @@ app = Flask(__name__, template_folder='views')
 
 
 
-def wrap_text_lines(text: str, max_width: int) -> str:
+
+def wrap_text_lines(text: str, max_width: int, num_lines: int = 2):
     """
-    Wraps text to a given max width (in characters) by inserting \n.
+    Wraps text to a given max width (in characters) and returns the specified number of lines.
 
     :param text: The original text string
     :param max_width: Maximum characters per line before wrapping
-    :return: Wrapped text string
+    :param num_lines: Number of lines to return from the wrapped text
+    :return: Tuple containing the requested lines (empty strings if not enough lines)
     """
-    lines = textwrap.wrap(text, width=max_width)
-    line1 = lines[0] if len(lines) > 0 else ""
-    line2 = lines[1] if len(lines) > 1 else ""
-    return line1, line2
-
+    wrapped = textwrap.wrap(text, width=max_width)
+    result = []
+    for i in range(num_lines):
+        result.append(wrapped[i] if i < len(wrapped) else "")
+    return tuple(result)
 
 
 @app.route("/")
@@ -29,7 +31,7 @@ def form():
 def generate():
     form_data = request.form
     vehicle_condition_line1, vehicle_condition_line2,  = wrap_text_lines(form_data.get("vehicle_condition", "Macus"), max_width=120)
-    payment_terms_line1, payment_terms_line2,  = wrap_text_lines(form_data.get("payment_terms", "Payment"), max_width=120)
+    payment_terms_line1, payment_terms_line2,payment_terms_line3,payment_terms_line4,payment_terms_line5  = wrap_text_lines(form_data.get("payment_terms", "Payment"), max_width=120, num_lines=5)
     customer_support_line1, customer_support_line2 = wrap_text_lines(
         form_data.get(
             "customer_support",
@@ -37,22 +39,7 @@ def generate():
         ), 
         max_width=120
     )
-    payment_terms_1_line1, payment_terms_1_line2 = wrap_text_lines(
-        form_data.get("payment_terms_1", "A down payment of €10,000.00 or full payment needs to be received before 20/06/2025. Failure to do so may result in the"),
-        max_width=120
-    )
-    payment_terms_2_line1, payment_terms_2_line2 = wrap_text_lines(
-        form_data.get("payment_terms_2", "A full payment must be completed before 03/07/2025."),
-        max_width=120
-    )
-    payment_terms_3_line1, payment_terms_3_line2 = wrap_text_lines(
-        form_data.get("payment_terms_3", "In case the payment terms are not met, the order will be cancelled. We will charge you a cancellation fee of 10% and any"),
-        max_width=120
-    )
-    payment_terms_4_line1, payment_terms_4_line2 = wrap_text_lines(
-        form_data.get("payment_terms_4", "Purchased vehicle(s) must be collected within 21 days. If this time frame is exceeded, a storage fee of €35 will be"),
-        max_width=120
-    )
+
     general_terms_line1, general_terms_line2 = wrap_text_lines(
         form_data.get("general_terms", "The General Terms and Conditions of Sale and Delivery of BAS World apply to this offer, you can review these at all times via"),
         max_width=120
@@ -72,12 +59,12 @@ def generate():
         "damon.sa.office@gmail.com": form_data.get("buyer_email", ""),
         "+34637404711": form_data.get("buyer_phone", ""),
         "VAT GR094419799": form_data.get("buyer_vat", ""),
-        "BAS World B.V.": form_data.get("seller_name", ""),
+        # "BAS World B.V.": form_data.get("seller_name", ""),
         "Mac. Arthurweg 2": form_data.get("seller_street", ""),
         "5466 AP, Veghel, NL": form_data.get("seller_address", ""),
         "VAT  NL806859945B02": form_data.get("seller_vat", ""),
         "17103220": form_data.get("coc", ""),
-        "CIF, Piraeus, GR": form_data.get("delivery", ""),
+        # "CIF, Piraeus, GR": form_data.get("delivery", ""),
         "1 x Delivery Check-up": form_data.get("delivery_checkup", ""),
         "1 x T2LF": form_data.get("delivery_checkup_line2", ""),
         "Claas Axion 950 C-Matic Cebis 4X4": form_data.get("vehicle_description", ""),
@@ -91,24 +78,27 @@ def generate():
         "Vehicles are sold in the condition you accepted. No warranty applies unless a BAS World warranty package is purchased or a": vehicle_condition_line1,
         "factory warranty is applicable.": vehicle_condition_line2,
         "A down payment of": payment_terms_line1,
-        "€10,000.00":payment_terms_line1,
-        "or full payment needs to be received before":payment_terms_line1,
-        "20/06/2025":payment_terms_line1,
-        ". Failure to do so may result in the":payment_terms_line1,
+        "€10,000.00":"",
+        "or full payment needs to be received before":"",
+        "20/06/2025":"",
+        ". Failure to do so may result in the":"",
         "unavailability of the chosen vehicle(s).": payment_terms_line2, 
+        "A full payment must be completed before": payment_terms_line3,
+        "03/07/2025": "",
+        ".": "",
+        "In case the payment terms are not met, the order will be cancelled. We will charge you a cancellation fee of 10% and any": payment_terms_line4,
+        "fee of 10% and any": "",
+        "advance costs incurred, with a minimum of €2500. The vehicle(s) remains property of BAS World.": "",
+        "Purchased vehicle(s) must be collected within 21 days. If this time frame is exceeded, a storage fee of €35 will be charged per": payment_terms_line5,
+        "day for each vehicle.": "",
+
+        # "Purchased vehicle(s) must be collected within 21 days. If this time frame is exceeded, a storage fee of €35 will be charged per": payment_terms_4_line1,
+        # "day for each vehicle.": payment_terms_4_line2,
         "For questions and support concerning the delivery of your vehicle(s), please contact Customer Support at cs@basworld.com or": customer_support_line1,
         "+31 413 75 42 50.": customer_support_line2,
         "Vehicles are sold in the condition you accepted. No warranty applies unless a BAS World warranty package is purchased or a": vehicle_condition_line1,
         "factory warranty is applicable.": vehicle_condition_line2,
 
-        "A full payment must be completed before": payment_terms_2_line2,
-        "03/07/2025": payment_terms_2_line2,
-        ".": payment_terms_3_line2,
-        "Purchased vehicle(s) must be collected within 21 days. If this time": payment_terms_4_line1,
-        "advance costs incurred, with a minimum of €2500. The vehicle(s) remains property of BAS World.": payment_terms_3_line2,
-
-        "Purchased vehicle(s) must be collected within 21 days. If this time frame is exceeded, a storage fee of €35 will be charged per": payment_terms_4_line1,
-        "day for each vehicle.": payment_terms_4_line2,
 
         "The General Terms and Conditions of Sale and Delivery of BAS World apply to this offer, you can review these at all times via": general_terms_line1,
         "https://basgroup.a.bigcontent.io/v1/static/General Terms and Conditions of Sale and Delivery of BAS World. By signing this": general_terms_line2,
@@ -117,7 +107,7 @@ def generate():
 
     # account_name = form_data.get("account_name", "")
     # found_account_name = False
-    input_file = "Sales_Contract_10004048_20250619032751 (2).pdf"
+    input_file = "Sales_Contract.pdf"
     roboto_regular = os.path.join("fonts", "Roboto.ttf")
     roboto_black = os.path.join("fonts", "RobotoBlack.ttf")
     output_file = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf").name
@@ -144,17 +134,22 @@ def generate():
     veghel_color = (116/255, 116/255, 116/255)
     for page in doc:
         text_dict = page.get_text("dict")
-        for block in text_dict["blocks"]:
-            if "lines" in block:
-                for line in block["lines"]:
-            
-                    for span in line["spans"]:
+        for block in reversed(text_dict["blocks"]):
+            if block["type"] != 0:  # Skip non-text blocks
+                continue
+    
+            if "lines" in reversed(block):
+                for line in reversed(block["lines"]):
+                    print(f"\n")
+
+                    for span in reversed(line["spans"]):
+                        
                         original_text = span["text"].strip()
-                        # print(f"Processing text: {original_text}")
-                        for old_text, new_text in replacements.items():
+                        print(f"Processing text: {original_text}")
+                        for old_text, new_text in list(replacements.items()):
                                 
                             # print(f"Checking if '{original_text}' matches '{old_text}'")
-                            print(original_text == old_text)
+                            # print(original_text == old_text)
                             if original_text == old_text:
                                 rect = fitz.Rect(span["bbox"])
                                 font_size = span["size"]

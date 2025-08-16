@@ -32,17 +32,17 @@ def generate():
     form_data = request.form
     vehicle_condition_line1, vehicle_condition_line2,  = wrap_text_lines(form_data.get("vehicle_condition", "Macus"), max_width=120)
     payment_terms_line1, payment_terms_line2,payment_terms_line3,payment_terms_line4,payment_terms_line5  = wrap_text_lines(form_data.get("payment_terms", "Payment"), max_width=120, num_lines=5)
-    customer_support_line1, customer_support_line2 = wrap_text_lines(
+    customer_support_line1, customer_support_line2, = wrap_text_lines(
         form_data.get(
             "customer_support",
             "For questions and support concerning the delivery of your vehicle(s), please contact Customer Support at cs@basworld.com or +31 413 75 42 50."
         ), 
         max_width=120
-    )
-
-    general_terms_line1, general_terms_line2 = wrap_text_lines(
+        )
+    print()
+    general_terms_line1, general_terms_line2, general_terms_line3, general_terms_line4 = wrap_text_lines(
         form_data.get("general_terms", "The General Terms and Conditions of Sale and Delivery of BAS World apply to this offer, you can review these at all times via"),
-        max_width=120
+        max_width=120,num_lines=4
     )
     replacements = {
         "19/06/2025": form_data.get("date", ""),
@@ -91,17 +91,15 @@ def generate():
         "advance costs incurred, with a minimum of €2500. The vehicle(s) remains property of BAS World.": "",
         "Purchased vehicle(s) must be collected within 21 days. If this time frame is exceeded, a storage fee of €35 will be charged per": payment_terms_line5,
         "day for each vehicle.": "",
-
-        # "Purchased vehicle(s) must be collected within 21 days. If this time frame is exceeded, a storage fee of €35 will be charged per": payment_terms_4_line1,
-        # "day for each vehicle.": payment_terms_4_line2,
         "For questions and support concerning the delivery of your vehicle(s), please contact Customer Support at cs@basworld.com or": customer_support_line1,
         "+31 413 75 42 50.": customer_support_line2,
         "Vehicles are sold in the condition you accepted. No warranty applies unless a BAS World warranty package is purchased or a": vehicle_condition_line1,
         "factory warranty is applicable.": vehicle_condition_line2,
-
-
-        "The General Terms and Conditions of Sale and Delivery of BAS World apply to this offer, you can review these at all times via": "",
-        "https://basgroup.a.bigcontent.io/v1/static/General Terms and Conditions of Sale and Delivery of BAS World. By signing this": general_terms_line2,
+        "The General Terms and Conditions of Sale and Delivery of BAS World apply to this offer, you can review these at all times via": general_terms_line1,
+        "https://basgroup.a.bigcontent.io/v1/static/General Terms and Conditions of Sale and Delivery of BAS World": general_terms_line2,
+        ". By signing this": "",
+        "offer the customer declares to have received the aforementioned terms and conditions, and to have read and accepted the rights":general_terms_line3,
+        "and obligations as set out therein.": general_terms_line4,
     }
 
 

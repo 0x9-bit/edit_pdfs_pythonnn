@@ -100,7 +100,7 @@ def generate():
         "factory warranty is applicable.": vehicle_condition_line2,
 
 
-        "The General Terms and Conditions of Sale and Delivery of BAS World apply to this offer, you can review these at all times via": general_terms_line1,
+        "The General Terms and Conditions of Sale and Delivery of BAS World apply to this offer, you can review these at all times via": "",
         "https://basgroup.a.bigcontent.io/v1/static/General Terms and Conditions of Sale and Delivery of BAS World. By signing this": general_terms_line2,
     }
 

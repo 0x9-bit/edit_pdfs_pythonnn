@@ -60,6 +60,7 @@ def generate():
     account_name = form_data.get("account_name", "")
     found_account_name = False
     input_file = "Proforma_Invoice_10004048_20250619032754 (3).pdf"
+    symbols_font_name="symbol"
     roboto_regular = os.path.join("fonts", "Roboto.ttf")
     roboto_black = os.path.join("fonts", "RobotoBlack.ttf")
     output_file = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf").name
@@ -94,12 +95,24 @@ def generate():
                         original_text = span["text"].strip()
                         # print(f"Processing text: {original_text}")
                         for old_text, new_text in replacements.items():
-                                
+                            
                             # print(f"Checking if '{original_text}' matches '{old_text}'")
                             print(original_text == old_text)
                             if original_text == old_text:
+                                
                                 rect = fitz.Rect(span["bbox"])
                                 font_size = span["size"]
+                                if "€" in new_text:
+                                    new_text = new_text.replace("€", "\u00A0")
+                                    font = symbols_font_name
+                                    page.draw_rect(rect, color=None, fill=(1, 1, 1))
+                                    page.insert_text((rect.x0, rect.y1 - 0.5),
+                                    new_text,
+                                    fontname=font,
+                                    fontsize=font_size,
+                                    color=(0, 0, 0)
+                                    )
+                                    continue
                                 if old_text == "70243465":
                                     page.draw_rect(rect, color=None, fill=(1, 1, 1))
                                     page.insert_text(
@@ -197,6 +210,7 @@ def generate():
                                         color=(0, 0, 0)
                                     )
                                     continue
+                                
                                 page.draw_rect(rect, color=None, fill=(1, 1, 1))
                                 page.insert_text(
                                     (rect.x0, rect.y1 - 0.5),

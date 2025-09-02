@@ -35,9 +35,6 @@ def form():
 @app.route("/generate", methods=["POST"])
 def generate():
     form_data = request.form
-
-
-
     vehicle_condition = wrap_text_lines(form_data.get("vehicle_condition", "Macus"), max_width=120, num_lines=2)
     payment_terms = wrap_text_lines(form_data.get("payment_terms", "Payment"), max_width=120, num_lines=5)
     customer_support = wrap_text_lines(
@@ -128,6 +125,7 @@ def generate():
     input_file = "Sales_Contract.pdf"
     roboto_regular = os.path.join("fonts", "Roboto.ttf")
     roboto_black = os.path.join("fonts", "RobotoBlack.ttf")
+    symbols_font_name="symbol"
     output_file = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf").name
     doc = fitz.open(input_file)
     cm_to_points = 72 / 2.54
@@ -171,6 +169,17 @@ def generate():
                             if original_text == old_text:
                                 rect = fitz.Rect(span["bbox"])
                                 font_size = span["size"]
+                                if "€" in new_text:
+                                    new_text = new_text.replace("€", "\u00A0")
+                                    font = symbols_font_name
+                                    page.draw_rect(rect, color=None, fill=(1, 1, 1))
+                                    page.insert_text((rect.x0, rect.y1 - 0.5),
+                                    new_text,
+                                    fontname=font,
+                                    fontsize=font_size,
+                                    color=(0, 0, 0)
+                                    )
+                                    continue
                                 if old_text == "70243465":
                                     page.draw_rect(rect, color=None, fill=(1, 1, 1))
                                     page.insert_text(

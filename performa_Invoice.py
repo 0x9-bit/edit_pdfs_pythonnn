@@ -6,19 +6,12 @@ app = Flask(__name__, template_folder='views')
 
 
 
-def wrap_text_lines(text: str, max_width: int) -> str:
+def wrap_text_lines(text: str, max_width: int) -> list[str]:
     """
-    Wraps text to a given max width (in characters) by inserting \n.
-
-    :param text: The original text string
-    :param max_width: Maximum characters per line before wrapping
-    :return: Wrapped text string
+    Wraps text to a given max width (in characters).
+    Returns list of lines.
     """
-    lines = textwrap.wrap(text, width=max_width)
-    line1 = lines[0] if len(lines) > 0 else ""
-    line2 = lines[1] if len(lines) > 1 else ""
-    return line1, line2
-
+    return textwrap.wrap(text, width=max_width)
 
 
 @app.route("/")
@@ -28,8 +21,8 @@ def form():
 @app.route("/generate", methods=["POST"])
 def generate():
     form_data = request.form
-    vehicle_condition_line1, vehicle_condition_line2,  = wrap_text_lines(form_data.get("vehicle_condition", "Macus"), max_width=120)
-    payment_terms_line1, payment_terms_line2,  = wrap_text_lines(form_data.get("payment_terms", "Payment"), max_width=120)
+    vehicle_condition_lines = wrap_text_lines(form_data.get("vehicle_condition", "Macus"), max_width=120)
+    payment_terms_lines = wrap_text_lines(form_data.get("payment_terms", "Payment"), max_width=120)
 
     replacements = {
         "19/06/2025": form_data.get("date", ""),
@@ -56,10 +49,11 @@ def generate():
         "70243465": form_data.get("seller_reg", ""),
         "Claas": form_data.get("vehicle_brand", ""),
         "Axion 950 C-Matic Cebis": form_data.get("vehicle_model", ""),
-        "Vehicles are sold in the condition you accepted. No warranty applies unless a BAS World warranty package is purchased or a": vehicle_condition_line1,
-        "factory warranty is applicable.": vehicle_condition_line2,
-        "In case the payment terms are not met, the order will be canceled and a cancellation fee of 10% will be charged with a minimum": payment_terms_line1,
-        "of €2500. The vehicle remains property of BAS World.": payment_terms_line2
+        "Vehicles are sold in the condition you accepted. No warranty applies unless a BAS World warranty package is purchased or a": vehicle_condition_lines[0] if len(vehicle_condition_lines) > 0 else "",
+        "factory warranty is applicable.": (vehicle_condition_lines[1:]),
+        "In case the payment terms are not met, the order will be canceled and a cancellation fee of 10% will be charged with a minimum": payment_terms_lines[0] if len(payment_terms_lines) > 0 else "",
+        "of €2500. The vehicle remains property of BAS World.": "\n".join(payment_terms_lines[1:])
+  
     }
 
 

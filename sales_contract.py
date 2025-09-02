@@ -10,6 +10,7 @@ app = Flask(__name__, template_folder='views')
 def wrap_text_lines(text: str, max_width: int, num_lines: int = 2):
     """
     Wraps text to a given max width (in characters) and returns the specified number of lines.
+    Extra text beyond num_lines is merged into the last line separated by \n.
 
     :param text: The original text string
     :param max_width: Maximum characters per line before wrapping
@@ -18,10 +19,14 @@ def wrap_text_lines(text: str, max_width: int, num_lines: int = 2):
     """
     wrapped = textwrap.wrap(text, width=max_width)
     result = []
-    for i in range(num_lines):
-        result.append(wrapped[i] if i < len(wrapped) else "")
-    return tuple(result)
 
+    if len(wrapped) <= num_lines:
+        result = wrapped + [""] * (num_lines - len(wrapped))
+    else:
+        result = wrapped[:num_lines-1]
+        result.append("\n".join(wrapped[num_lines-1:]))
+
+    return tuple(result)
 
 @app.route("/")
 def form():
@@ -30,19 +35,26 @@ def form():
 @app.route("/generate", methods=["POST"])
 def generate():
     form_data = request.form
-    vehicle_condition_line1, vehicle_condition_line2,  = wrap_text_lines(form_data.get("vehicle_condition", "Macus"), max_width=120)
-    payment_terms_line1, payment_terms_line2,payment_terms_line3,payment_terms_line4,payment_terms_line5  = wrap_text_lines(form_data.get("payment_terms", "Payment"), max_width=120, num_lines=5)
-    customer_support_line1, customer_support_line2, = wrap_text_lines(
+
+
+
+    vehicle_condition = wrap_text_lines(form_data.get("vehicle_condition", "Macus"), max_width=120, num_lines=2)
+    payment_terms = wrap_text_lines(form_data.get("payment_terms", "Payment"), max_width=120, num_lines=5)
+    customer_support = wrap_text_lines(
         form_data.get(
             "customer_support",
             "For questions and support concerning the delivery of your vehicle(s), please contact Customer Support at cs@basworld.com or +31 413 75 42 50."
-        ), 
-        max_width=120
-        )
-    print()
-    general_terms_line1, general_terms_line2, general_terms_line3, general_terms_line4 = wrap_text_lines(
-        form_data.get("general_terms", "The General Terms and Conditions of Sale and Delivery of BAS World apply to this offer, you can review these at all times via"),
-        max_width=120,num_lines=4
+        ),
+        max_width=120,
+        num_lines=2
+    )
+    general_terms = wrap_text_lines(
+        form_data.get(
+            "general_terms",
+            "The General Terms and Conditions of Sale and Delivery of BAS World apply to this offer, you can review these at all times via"
+        ),
+        max_width=120,
+        num_lines=4
     )
     replacements = {
         "19/06/2025": form_data.get("date", ""),
@@ -75,31 +87,39 @@ def generate():
         "70243465": form_data.get("seller_reg", ""),
         "Claas": form_data.get("vehicle_brand", ""),
         "Axion 950 C-Matic Cebis": form_data.get("vehicle_model", ""),
-        "Vehicles are sold in the condition you accepted. No warranty applies unless a BAS World warranty package is purchased or a": vehicle_condition_line1,
-        "factory warranty is applicable.": vehicle_condition_line2,
-        "A down payment of": payment_terms_line1,
+                # vehicle_condition
+        "Vehicles are sold in the condition you accepted. No warranty applies unless a BAS World warranty package is purchased or a": vehicle_condition[0],
+        "factory warranty is applicable.": vehicle_condition[1],
+
+        # payment_terms
+        "A down payment of": payment_terms[0],
+        "unavailability of the chosen vehicle(s).": payment_terms[1],
+        "A full payment must be completed before": payment_terms[2],
+        "In case the payment terms are not met, the order will be cancelled. We will charge you a cancellation fee of 10% and any": payment_terms[3],
+        "Purchased vehicle(s) must be collected within 21 days. If this time frame is exceeded, a storage fee of €35 will be charged per": payment_terms[4],
+
+        # customer_support
+        "For questions and support concerning the delivery of your vehicle(s), please contact Customer Support at cs@basworld.com or": customer_support[0],
+        "+31 413 75 42 50.": customer_support[1],
+
+        # general_terms
+        "The General Terms and Conditions of Sale and Delivery of BAS World apply to this offer, you can review these at all times via": general_terms[0],
+        "https://basgroup.a.bigcontent.io/v1/static/General Terms and Conditions of Sale and Delivery of BAS World": general_terms[1],
+        "offer the customer declares to have received the aforementioned terms and conditions, and to have read and accepted the rights": general_terms[2],
+        "and obligations as set out therein.": general_terms[3],
+        
         "€10,000.00":"",
         "or full payment needs to be received before":"",
         "20/06/2025":"",
         ". Failure to do so may result in the":"",
-        "unavailability of the chosen vehicle(s).": payment_terms_line2, 
-        "A full payment must be completed before": payment_terms_line3,
+       
         "03/07/2025": "",
         ".": "",
-        "In case the payment terms are not met, the order will be cancelled. We will charge you a cancellation fee of 10% and any": payment_terms_line4,
         "fee of 10% and any": "",
         "advance costs incurred, with a minimum of €2500. The vehicle(s) remains property of BAS World.": "",
-        "Purchased vehicle(s) must be collected within 21 days. If this time frame is exceeded, a storage fee of €35 will be charged per": payment_terms_line5,
         "day for each vehicle.": "",
-        "For questions and support concerning the delivery of your vehicle(s), please contact Customer Support at cs@basworld.com or": customer_support_line1,
-        "+31 413 75 42 50.": customer_support_line2,
-        "Vehicles are sold in the condition you accepted. No warranty applies unless a BAS World warranty package is purchased or a": vehicle_condition_line1,
-        "factory warranty is applicable.": vehicle_condition_line2,
-        "The General Terms and Conditions of Sale and Delivery of BAS World apply to this offer, you can review these at all times via": general_terms_line1,
-        "https://basgroup.a.bigcontent.io/v1/static/General Terms and Conditions of Sale and Delivery of BAS World": general_terms_line2,
+
         ". By signing this": "",
-        "offer the customer declares to have received the aforementioned terms and conditions, and to have read and accepted the rights":general_terms_line3,
-        "and obligations as set out therein.": general_terms_line4,
     }
 
 
